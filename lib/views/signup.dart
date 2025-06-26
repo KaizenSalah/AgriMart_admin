@@ -1,4 +1,4 @@
-import 'package:ecommerce_admin_app/controllers/auth_service.dart';
+import 'package:agri_mart_admin/controllers/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class SingupPage extends StatefulWidget {

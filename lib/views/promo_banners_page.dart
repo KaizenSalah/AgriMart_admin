@@ -1,6 +1,6 @@
-import 'package:ecommerce_admin_app/containers/additional_confirm.dart';
-import 'package:ecommerce_admin_app/controllers/db_service.dart';
-import 'package:ecommerce_admin_app/models/promo_banners_model.dart';
+import 'package:agri_mart_admin/containers/additional_confirm.dart';
+import 'package:agri_mart_admin/controllers/db_service.dart';
+import 'package:agri_mart_admin/models/promo_banners_model.dart';
 import 'package:flutter/material.dart';
 
 class PromoBannersPage extends StatefulWidget {

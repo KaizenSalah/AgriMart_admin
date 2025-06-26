@@ -1,17 +1,17 @@
-import 'package:ecommerce_admin_app/controllers/auth_service.dart';
-import 'package:ecommerce_admin_app/firebase_options.dart';
-import 'package:ecommerce_admin_app/providers/admin_provider.dart';
-import 'package:ecommerce_admin_app/views/admin_home.dart';
-import 'package:ecommerce_admin_app/views/categories_page.dart';
-import 'package:ecommerce_admin_app/views/coupons.dart';
-import 'package:ecommerce_admin_app/views/login.dart';
-import 'package:ecommerce_admin_app/views/modify_product.dart';
-import 'package:ecommerce_admin_app/views/modify_promo.dart';
-import 'package:ecommerce_admin_app/views/orders_page.dart';
-import 'package:ecommerce_admin_app/views/products_page.dart';
-import 'package:ecommerce_admin_app/views/promo_banners_page.dart';
-import 'package:ecommerce_admin_app/views/signup.dart';
-import 'package:ecommerce_admin_app/views/view_product.dart';
+import 'package:agri_mart_admin/controllers/auth_service.dart';
+import 'package:agri_mart_admin/firebase_options.dart';
+import 'package:agri_mart_admin/providers/admin_provider.dart';
+import 'package:agri_mart_admin/views/admin_home.dart';
+import 'package:agri_mart_admin/views/categories_page.dart';
+import 'package:agri_mart_admin/views/coupons.dart';
+import 'package:agri_mart_admin/views/login.dart';
+import 'package:agri_mart_admin/views/modify_product.dart';
+import 'package:agri_mart_admin/views/modify_promo.dart';
+import 'package:agri_mart_admin/views/orders_page.dart';
+import 'package:agri_mart_admin/views/products_page.dart';
+import 'package:agri_mart_admin/views/promo_banners_page.dart';
+import 'package:agri_mart_admin/views/signup.dart';
+import 'package:agri_mart_admin/views/view_product.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AdminProvider(),
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Ecommerce Admin App',
+        title: 'AgriMart Admin',
         theme: ThemeData(
           // This is the theme of your application.
           //

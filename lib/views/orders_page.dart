@@ -1,7 +1,7 @@
 
-import 'package:ecommerce_admin_app/controllers/db_service.dart';
-import 'package:ecommerce_admin_app/models/orders_model.dart';
-import 'package:ecommerce_admin_app/providers/admin_provider.dart';
+import 'package:agri_mart_admin/controllers/db_service.dart';
+import 'package:agri_mart_admin/models/orders_model.dart';
+import 'package:agri_mart_admin/providers/admin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

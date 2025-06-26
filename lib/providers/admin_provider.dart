@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_admin_app/controllers/db_service.dart';
+import 'package:agri_mart_admin/controllers/db_service.dart';
 import 'package:flutter/material.dart';
 
 class AdminProvider extends ChangeNotifier{

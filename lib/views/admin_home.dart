@@ -1,7 +1,7 @@
-import 'package:ecommerce_admin_app/containers/dashboard_text.dart';
-import 'package:ecommerce_admin_app/containers/home_button.dart';
-import 'package:ecommerce_admin_app/controllers/auth_service.dart';
-import 'package:ecommerce_admin_app/providers/admin_provider.dart';
+import 'package:agri_mart_admin/containers/dashboard_text.dart';
+import 'package:agri_mart_admin/containers/home_button.dart';
+import 'package:agri_mart_admin/controllers/auth_service.dart';
+import 'package:agri_mart_admin/providers/admin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

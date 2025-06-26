@@ -1,5 +1,5 @@
-import 'package:ecommerce_admin_app/constants/discount.dart';
-import 'package:ecommerce_admin_app/models/products_model.dart';
+import 'package:agri_mart_admin/constants/discount.dart';
+import 'package:agri_mart_admin/models/products_model.dart';
 import 'package:flutter/material.dart';
 
 class ViewProduct extends StatefulWidget {

@@ -33,7 +33,7 @@ Future<String?> uploadToCloudinary(XFile? xFile) async {
 
   // Add other form fields like 'upload_preset' and 'resource_type'
   request.fields['upload_preset'] = "preset-for-file-upload";
-  request.fields['resource_type'] = "raw";
+  request.fields['resource_type'] = "image";
 
   // Send the request and await the response
   var response = await request.send();

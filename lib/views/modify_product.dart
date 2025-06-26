@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'package:ecommerce_admin_app/controllers/cloudinary_service.dart';
-import 'package:ecommerce_admin_app/controllers/db_service.dart';
-import 'package:ecommerce_admin_app/controllers/storage_service.dart';
-import 'package:ecommerce_admin_app/models/products_model.dart';
-import 'package:ecommerce_admin_app/providers/admin_provider.dart';
+import 'package:agri_mart_admin/controllers/cloudinary_service.dart';
+import 'package:agri_mart_admin/controllers/db_service.dart';
+import 'package:agri_mart_admin/controllers/storage_service.dart';
+import 'package:agri_mart_admin/models/products_model.dart';
+import 'package:agri_mart_admin/providers/admin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
