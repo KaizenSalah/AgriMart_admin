@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AdminProvider(),
       builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Ecommerce Admin App',
         theme: ThemeData(
           // This is the theme of your application.
