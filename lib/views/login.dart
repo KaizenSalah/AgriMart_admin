@@ -1,5 +1,7 @@
 import 'package:agri_mart_admin/controllers/auth_service.dart';
+import 'package:agri_mart_admin/providers/admin_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,8 +12,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
     final formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Form(
           key:  formKey,
           child: Column(children: [
-             SizedBox(
+             const SizedBox(
                   height: 120,
                 ),
                   SizedBox(
@@ -27,13 +29,13 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Login",
                         style:
                             TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
                       ),
-                  Text("Get started with your account"),
-                  SizedBox(
+                  const Text("Get started with your account"),
+                  const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
@@ -42,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (value) =>
                           value!.isEmpty ? "Email cannot be empty." : null,
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text("Email"),
                       ),
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
@@ -61,53 +63,53 @@ class _LoginPageState extends State<LoginPage> {
                           : null,
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text("Password"),
                       ),
                     )),
-                     SizedBox(
+                     const SizedBox(
                   height: 10,
                 ),
                 Row(  mainAxisAlignment: MainAxisAlignment.end,children: [
                   TextButton(onPressed: (){
                   showDialog(context: context, builder:  (builder) {
                   return AlertDialog(
-                    title:  Text("Forget Password"),
+                    title:  const Text("Forget Password"),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Enter you email"),
-                        SizedBox(height: 10,),
-                        TextFormField (controller:  _emailController, decoration: InputDecoration(label: Text("Email"), border: OutlineInputBorder()),),
+                        const Text("Enter you email"),
+                        const SizedBox(height: 10,),
+                        TextFormField (controller:  _emailController, decoration: const InputDecoration(label: Text("Email"), border: OutlineInputBorder()),),
                       ],
                     ),
                     actions: [
                       TextButton(onPressed: (){
-                        Navigator.pop(context);}, child: Text("Cancel")),
+                        Navigator.pop(context);}, child: const Text("Cancel")),
                       TextButton(onPressed: ()async{
                         if(_emailController.text.isEmpty){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email cannot be empty")));
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Email cannot be empty")));
                           return;
                         }
                        await AuthService().resetPassword(_emailController.text).then( (value) {
                         if(value=="Mail Sent"){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password reset link sent to your email")));
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password reset link sent to your email")));
                           Navigator.pop(context);
                         }
                         else{
-ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value,style: TextStyle( color:  Colors.white),), backgroundColor: Colors.red.shade400,));
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value,style: const TextStyle( color:  Colors.white),), backgroundColor: Colors.red.shade400,));
                         }
                         });
-                      }, child: Text("Submit")),
+                      }, child: const Text("Submit")),
                     ]
 
                   );
                 });
-                  }, child: Text("Forget Password")),
+                  }, child: const Text("Forget Password")),
                 ],),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
@@ -117,34 +119,41 @@ ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value,style: T
                       
                       
                         onPressed: () {
-                           if (formKey.currentState!.validate()) {
+                            if (formKey.currentState!.validate()) {
                               AuthService()
-                              .loginWithEmail(
-                                  _emailController.text, _passwordController.text)
-                              .then((value) {
-                            if (value == "Login Successful") {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Login Successful")));
-                             Navigator.restorablePushNamedAndRemoveUntil(context, "/home" , (route) => false);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                  value,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.red.shade400,
-                              ));
+                                  .loginWithEmail(_emailController.text,
+                                      _passwordController.text)
+                                  .then((value) {
+                                if (!context.mounted) return;
+                                if (value == "Login Successful") {
+                                  Provider.of<AdminProvider>(context,
+                                          listen: false)
+                                      .init();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text("Login Successful")));
+                                  Navigator.restorablePushNamedAndRemoveUntil(
+                                      context, "/home", (route) => false);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      value,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.red.shade400,
+                                  ));
+                                }
+                              });
                             }
-                          });
-                        
-                        }
                         },
-                        child: Text(
+                        child: const Text(
                           "Login",
                           style: TextStyle(fontSize: 16),
                         ))),
           
-                        SizedBox(
+                        const SizedBox(
                   height: 10,
                 ),
           
@@ -152,12 +161,12 @@ ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value,style: T
                  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have and account?"),
+                    const Text("Don't have and account?"),
                     TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, "/signup");
                         },
-                        child: Text("Sign Up"))
+                        child: const Text("Sign Up"))
                   ],
                 )
                

@@ -1,56 +1,69 @@
-// uploading files to cloudinary
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import "package:http/http.dart" as http;
-
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
+const Set<String> _allowedImageExtensions = {
+  'jpg',
+  'jpeg',
+  'png',
+  'webp',
+  'gif',
+};
+
+const int _maxImageBytes = 10 * 1024 * 1024; // 10 MB
+
+/// Uploads a validated image [xFile] to Cloudinary and returns its secure URL.
 Future<String?> uploadToCloudinary(XFile? xFile) async {
   if (xFile == null) {
-    print("No file selected!");
     return null;
   }
 
-  // Get the Cloudinary cloud name from environment variables
-  String cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
+  final extension = xFile.name.split('.').last.toLowerCase();
+  if (!_allowedImageExtensions.contains(extension)) {
+    debugPrint("Unsupported image format: $extension");
+    return null;
+  }
 
-  // Create a MultipartRequest to upload the file
-  var uri = Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/raw/upload");
-  var request = http.MultipartRequest("POST", uri);
+  final fileBytes = await xFile.readAsBytes();
+  if (fileBytes.isEmpty || fileBytes.length > _maxImageBytes) {
+    debugPrint("Image size out of allowed bounds.");
+    return null;
+  }
 
-  // Read the file content as bytes using xFile.bytes() if it's an XFile
-  var fileBytes = await xFile.readAsBytes();
+  final cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME']?.trim() ?? '';
+  if (cloudName.isEmpty) {
+    debugPrint("CLOUDINARY_CLOUD_NAME is not configured.");
+    return null;
+  }
 
-  var multipartFile = http.MultipartFile.fromBytes(
-    'file', // The form field name for the file
+  final uploadPreset =
+      dotenv.env['CLOUDINARY_UPLOAD_PRESET']?.trim().isNotEmpty == true
+          ? dotenv.env['CLOUDINARY_UPLOAD_PRESET']!.trim()
+          : 'preset-for-file-upload';
+
+  final uri = Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/image/upload");
+  final request = http.MultipartRequest("POST", uri);
+
+  final multipartFile = http.MultipartFile.fromBytes(
+    'file',
     fileBytes,
-    filename: xFile.name, // Use the name of the XFile
+    filename: xFile.name,
   );
 
-  // Add the file part to the request
   request.files.add(multipartFile);
+  request.fields['upload_preset'] = uploadPreset;
 
-  // Add other form fields like 'upload_preset' and 'resource_type'
-  request.fields['upload_preset'] = "preset-for-file-upload";
-  request.fields['resource_type'] = "image";
-
-  // Send the request and await the response
-  var response = await request.send();
-
-  // Get the response as text
-  var responseBody = await response.stream.bytesToString();
-
-  // Print the response
-  print(responseBody);
+  final response = await request.send();
+  final responseBody = await response.stream.bytesToString();
 
   if (response.statusCode == 200) {
-    var jsonResponse = jsonDecode(responseBody);
-    // Print the secure URL of the uploaded file
-    print("Upload successful!");
-    return jsonResponse["secure_url"];
+    final jsonResponse = jsonDecode(responseBody) as Map<String, dynamic>;
+    return jsonResponse["secure_url"] as String?;
   } else {
-    print("Upload failed with status: ${response.statusCode}");
+    debugPrint("Cloudinary upload failed with status: ${response.statusCode}");
     return null;
   }
 }

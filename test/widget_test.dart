@@ -1,30 +1,36 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:agri_mart_admin/constants/discount.dart';
+import 'package:agri_mart_admin/models/products_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ecommerce_admin_app/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Admin discountPercent', () {
+    test('calculates percentage discount accurately', () {
+      expect(discountPercent(1000, 750), '25');
+      expect(discountPercent(500, 500), '0');
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('handles zero oldPrice safely', () {
+      expect(discountPercent(0, 100), '0');
+    });
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('Admin ProductsModel', () {
+    test('parses product JSON with defaults', () {
+      final product = ProductsModel.fromJson({
+        'name': 'Organic Fertilizer',
+        'desc': 'High-yield fertilizer',
+        'image': 'https://example.com/img.png',
+        'old_price': 500,
+        'new_price': 400,
+        'category': 'fertilizers',
+        'quantity': 20,
+      }, 'prod_1');
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(product.id, 'prod_1');
+      expect(product.name, 'Organic Fertilizer');
+      expect(product.old_price, 500);
+      expect(product.new_price, 400);
+      expect(product.maxQuantity, 20);
+    });
   });
 }

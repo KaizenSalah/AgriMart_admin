@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:agri_mart_admin/containers/additional_confirm.dart';
 import 'package:agri_mart_admin/controllers/cloudinary_service.dart';
 import 'package:agri_mart_admin/controllers/db_service.dart';
-import 'package:agri_mart_admin/controllers/storage_service.dart';
 import 'package:agri_mart_admin/models/categories_model.dart';
 import 'package:agri_mart_admin/providers/admin_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Categories"),
+        title: const Text("Categories"),
       ),
       body: Consumer<AdminProvider>(
         builder: (context, value, child) {
@@ -31,7 +30,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               CategoriesModel.fromJsonList(value.categories);
 
           if (value.categories.isEmpty) {
-            return Center(
+            return const Center(
               child: Text("No Categories Found"),
             );
           }
@@ -40,19 +39,18 @@ class _CategoriesPageState extends State<CategoriesPage> {
             itemCount: value.categories.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: Container(
+                leading: SizedBox(
                     height: 50,
                     width: 50,
-                    child: Image.network(categories[index].image == null ||
-                            categories[index].image == ""
+                    child: Image.network(categories[index].image == ""
                         ? "https://demofree.sirv.com/nope-not-here.jpg"
                         : categories[index].image)),
                 onTap: () {
                   showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                            title: Text("What you want to do"),
-                            content: Text("Delete action cannot be undone"),
+                            title: const Text("What you want to do"),
+                            content: const Text("Delete action cannot be undone"),
                             actions: [
                               TextButton(
                                   onPressed: () {
@@ -71,7 +69,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                               Navigator.pop(context);
                                             }));
                                   },
-                                  child: Text("Delete Category")),
+                                  child: const Text("Delete Category")),
                               TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
@@ -86,7 +84,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                               name: categories[index].name,
                                             ));
                                   },
-                                  child: Text("Update Category"))
+                                  child: const Text("Update Category"))
                             ],
                           ));
                 },
@@ -97,7 +95,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ),
                 subtitle: Text("Priority : ${categories[index].priority}"),
                 trailing: IconButton(
-                  icon: Icon(Icons.edit_outlined),
+                  icon: const Icon(Icons.edit_outlined),
                   onPressed: () {
                     showDialog(
                         context: context,
@@ -119,13 +117,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
         onPressed: () {
           showDialog(
               context: context,
-              builder: (context) => ModifyCategory(
+              builder: (context) => const ModifyCategory(
                     isUpdating: false,
                     categoryId: "",
                     priority: 0,
                   ));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -152,7 +150,7 @@ class ModifyCategory extends StatefulWidget {
 class _ModifyCategoryState extends State<ModifyCategory> {
   final formKey = GlobalKey<FormState>();
   final ImagePicker picker = ImagePicker();
-  late XFile? image = null;
+  XFile? image;
   TextEditingController categoryController = TextEditingController();
   TextEditingController imageController = TextEditingController();
   TextEditingController priorityController = TextEditingController();
@@ -175,7 +173,7 @@ class _ModifyCategoryState extends State<ModifyCategory> {
       setState(() {
         if (res != null) {
           imageController.text = res;
-          print("set image url ${res} : ${imageController.text}");
+          print("set image url $res : ${imageController.text}");
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Image uploaded successfully")));
         }
@@ -211,8 +209,8 @@ class _ModifyCategoryState extends State<ModifyCategory> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("All will be converted to lowercase"),
-              SizedBox(
+              const Text("All will be converted to lowercase"),
+              const SizedBox(
                 height: 10,
               ),
               TextFormField(
@@ -220,15 +218,15 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                 validator: (v) => v!.isEmpty ? "This cant be empty." : null,
                 decoration: InputDecoration(
                     hintText: "Category Name",
-                    label: Text("Category Name"),
+                    label: const Text("Category Name"),
                     fillColor: Colors.deepPurple.shade50,
                     filled: true),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text("This will be used in ordering categories"),
-              SizedBox(
+              const Text("This will be used in ordering categories"),
+              const SizedBox(
                 height: 10,
               ),
               TextFormField(
@@ -237,17 +235,17 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     hintText: "Priority",
-                    label: Text("Priority"),
+                    label: const Text("Priority"),
                     fillColor: Colors.deepPurple.shade50,
                     filled: true),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               image == null
                   ? imageController.text.isNotEmpty
                       ? Container(
-                          margin: EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(20),
                           height: 100,
                           width: double.infinity,
                           color: Colors.deepPurple.shade50,
@@ -255,9 +253,9 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                             imageController.text,
                             fit: BoxFit.contain,
                           ))
-                      : SizedBox()
+                      : const SizedBox()
                   : Container(
-                      margin: EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(20),
                       height: 200,
                       width: double.infinity,
                       color: Colors.deepPurple.shade50,
@@ -277,8 +275,8 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                     // NEW for cloudinary Upload
                     _pickImageAndCloudinaryUpload();
                   },
-                  child: Text("Pick Image")),
-              SizedBox(
+                  child: const Text("Pick Image")),
+              const SizedBox(
                 height: 10,
               ),
               TextFormField(
@@ -286,7 +284,7 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                 validator: (v) => v!.isEmpty ? "This cant be empty." : null,
                 decoration: InputDecoration(
                     hintText: "Image Link",
-                    label: Text("Image Link"),
+                    label: const Text("Image Link"),
                     fillColor: Colors.deepPurple.shade50,
                     filled: true),
               ),
@@ -299,7 +297,7 @@ class _ModifyCategoryState extends State<ModifyCategory> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text("Cancel")),
+            child: const Text("Cancel")),
         TextButton(
             onPressed: () async {
               if (formKey.currentState!.validate()) {
@@ -310,7 +308,7 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                     "image": imageController.text,
                     "priority": int.parse(priorityController.text)
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("Category Updated"),
                   ));
                 } else {
@@ -319,7 +317,7 @@ class _ModifyCategoryState extends State<ModifyCategory> {
                     "image": imageController.text,
                     "priority": int.parse(priorityController.text)
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("Category Added"),
                   ));
                 }

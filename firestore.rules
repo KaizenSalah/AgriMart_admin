@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.admin == true ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Admin registry: only admins can manage; users can only check their own record
+    match /admins/{adminId} {
+      allow read: if isOwner(adminId) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Catalog collections: readable by anyone, writable only by admins
+    match /shop_categories/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /shop_products/{docId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      // Admins can update anything; authenticated buyers can only decrement stock
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['quantity']) &&
+        request.resource.data.quantity is int &&
+        request.resource.data.quantity >= 0 &&
+        request.resource.data.quantity <= resource.data.quantity
+      );
+    }
+
+    match /shop_promos/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /shop_banners/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /shop_coupons/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // User profile & cart: strictly isolated to the owning user
+    match /shop_users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      match /cart/{itemId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Orders: isolated to owner or admin
+    match /shop_orders/{orderId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.user_id == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.user_id == request.auth.uid;
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        resource.data.user_id == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+        request.resource.data.status == 'CANCELLED'
+      );
+      allow delete: if isAdmin();
+    }
+  }
+}
