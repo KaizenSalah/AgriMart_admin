@@ -1,16 +1,33 @@
-# ecommerce_admin_app
+# AgriMart Admin
 
-A new Flutter project.
+Flutter admin dashboard for managing AgriMart products, categories, promos, banners, coupons, and orders.
 
-## Getting Started
+## Setup
 
-This project is a starting point for a Flutter application.
+1. Copy `.env.example` to `.env` and fill in your values:
+   ```bash
+   cp .env.example .env
+   ```
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+3. Deploy `firestore.rules` and `storage.rules` to your Firebase project.
 
-A few resources to get you started if this is your first Flutter project:
+## Environment Variables (`.env`)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+| Variable | Description |
+| --- | --- |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name for image uploads |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_SECRET_KEY` | Cloudinary API secret |
+| `CLOUDINARY_UPLOAD_PRESET` | Cloudinary unsigned upload preset (optional) |
+| `ADMIN_INVITE_CODE` | Required invite code for admin sign-up |
+| `STRIPE_PUBLISH_KEY` | Stripe publishable key |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run & Test
+
+```bash
+flutter run
+flutter test
+```
